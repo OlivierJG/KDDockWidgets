@@ -527,6 +527,16 @@ DropArea *DragController::dropAreaUnderCursor() const
     if (!topLevel)
         return nullptr;
 
+    if (qApp->keyboardModifiers() & Qt::ShiftModifier) {
+        qDebug() << "shift is pressed";
+
+        // This case is useful when we have a main window inside a main window
+        // Press Shift to trigger the inner dock indicators.
+        // (3-levels of nesting won't be supported)
+        if (auto dt = deepestDropAreaInTopLevel(topLevel, QCursor::pos()))
+            return dt;
+    }
+
     if (auto dt = qobject_cast<DropArea *>(topLevel)) {
         return dt;
     }

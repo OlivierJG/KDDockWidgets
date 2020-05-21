@@ -51,6 +51,7 @@
 #include <QTextEdit>
 #include <QVBoxLayout>
 #include <QToolButton>
+#include <QMenuBar>
 #include <QStyleFactory>
 
 #ifdef Q_OS_WIN
@@ -5144,15 +5145,32 @@ void TestDocks::tst_dockableMainWindows()
      m1->addDockWidget(dock1, Location_OnTop);
 
      auto m2 = new KDDockWidgets::MainWindow("mainwindow-dockable");
-     auto dock2 = createDockWidget("mainwindow-dw", m2);
-     dock2->show();
+     auto m2Container = createDockWidget("mainwindow-dw", m2);
+     auto menubar = m2->menuBar();
+     menubar->addMenu("File");
+     menubar->addMenu("View");
+     menubar->addMenu("Help");
+     m2Container->show();
 
-     auto fw = qobject_cast<FloatingWindow*>(dock2->window());
+     auto dock21 = createDockWidget("dock21", new QPushButton("foo"));
+     auto dock22 = createDockWidget("dock22", new QPushButton("foo"));
+     m2->addDockWidget(dock21, Location_OnLeft);
+     m2->addDockWidget(dock22, Location_OnRight);
+
+     auto fw = qobject_cast<FloatingWindow*>(m2Container->window());
+
+     QVERIFY(fw->hasSingleFrame());
+     QVERIFY(fw->hasSingleDockWidget());
+
      TitleBar *titleBar = fw->titleBar();
+
+     //WAIT
 
      QTest::qWait(10); // the DND state machine needs the event loop to start, otherwise activeState() is nullptr. (for offscreen QPA)
      const QPoint startPoint = titleBar->mapToGlobal(QPoint(5, 5));
      const QPoint destination = startPoint + QPoint(20, 20);
+
+     // Check that we don't get the "Refusing to itself" warning. not actually dropping anywhere
      drag(titleBar, startPoint, destination);
 }
 

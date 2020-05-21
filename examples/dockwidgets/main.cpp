@@ -176,6 +176,9 @@ int main(int argc, char **argv)
         auto mainWindowDockWidget = new DockWidget(QStringLiteral("MyMainWindow-2-DW"));
         auto dockableMainWindow = new MyMainWindow(QStringLiteral("MyMainWindow-2"), options,
                                                    false, false, restoreIsRelative, false);
+
+        dockableMainWindow->setStyleSheet(QStringLiteral("background: yellow"));
+
         dockableMainWindow->setWindowTitle("Dockable Main Window");
         dockableMainWindow->show();
         mainWindowDockWidget->setWidget(dockableMainWindow);
