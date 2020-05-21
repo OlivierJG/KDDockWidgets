@@ -173,11 +173,14 @@ int main(int argc, char **argv)
         mainWindow2->resize(1200, 1200);
         mainWindow2->show();
     } else if (parser.isSet(dockableMainWindows)) {
-
+        auto mainWindowDockWidget = new DockWidget(QStringLiteral("MyMainWindow-2-DW"));
         auto dockableMainWindow = new MyMainWindow(QStringLiteral("MyMainWindow-2"), options,
                                                    false, false, restoreIsRelative, false);
         dockableMainWindow->setWindowTitle("Dockable Main Window");
         dockableMainWindow->show();
+        mainWindowDockWidget->setWidget(dockableMainWindow);
+        mainWindowDockWidget->show();
+        mainWindowDockWidget->resize(800, 800);
     }
 
     return app.exec();
